@@ -38,4 +38,4 @@ Use the **KeepAwakeIterations** setting to ensure that the devices are not compr
 
 
 ![Icon](https://github.com/arun-ks/ScreenSaverSaver/main/resources/ScreenSaverSaver.ico?raw=true)
-![Icon](https://github.com/github/arun-ks/ScreenSaverSaver/resources/blob/assets/ScreenSaverSaver.ico)
+![Icon2](./resources/ScreenSaverSaver.ico)
