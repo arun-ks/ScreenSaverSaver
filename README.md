@@ -11,7 +11,7 @@ Handy tool for users whose Screen Saver Settings are controlled by corporate Adm
 ## How does it work ?
 The script will move the mouse few pixels after regular (configurable) intervals to keep the screensaver at bay.
 
-If the screen saver has been kept away for a configurable consecutive iterations, the script will exit.
+If the screen saver has been kept awake for a configurable consecutive iterations, the script will exit.
 
 ## Pre-requisite & Installation guide
 You will need [Autohotkey](https://www.autohotkey.com/) installed to execute the .ahk script.
@@ -19,7 +19,9 @@ Alternately, you can used the compiled .exe file on windows.
 
 To install, download all the files in this repository.
 Ensure ScreenSaverSaver.ahk, ScreenSaverSaver.exe & ScreenSaverSaver.ini are in same folder. 
-ScreenSaverSaver.ico should be in "resources" subfolder
+ScreenSaverSaver.ico should be in "resources" subfolder.
+
+That's it ! Execute .ahk or .exe file when you need to keep the system unlocked.
 
 ## Configuration Guide
 
