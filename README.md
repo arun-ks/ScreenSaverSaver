@@ -21,7 +21,8 @@ To install, download all the files in this repository.
 Ensure ScreenSaverSaver.ahk, ScreenSaverSaver.exe & ScreenSaverSaver.ini are in same folder. 
 ScreenSaverSaver.ico should be in "resources" subfolder.
 
-That's it ! Execute .ahk or .exe file when you need to keep the system unlocked.
+That's it ! 
+Execute .ahk or .exe file when you need to keep the system unlocked.
 
 ## Configuration Guide
 
