@@ -1,6 +1,6 @@
 # ScreenSaver Saver
 
-![alt text](https://github.com/arun-ks/ScreenSaverSaver/image.jpg?raw=true)
+![alt text](https://github.com/arun-ks/ScreenSaverSaver/resources/ScreenSaverSaver.ico?raw=true)
 
 ### Keep computer unlocked by ensuring Screen Saver is not activated.
 
