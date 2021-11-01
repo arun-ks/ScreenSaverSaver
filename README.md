@@ -1,6 +1,6 @@
 # ScreenSaver Saver
 
-![Icon](https://github.com/arun-ks/ScreenSaverSaver/main/resources/ScreenSaverSaver.ico?raw=true)
+
 
 ### Keep computer unlocked by ensuring Screen Saver is not activated.
 
@@ -34,3 +34,4 @@ Update following settings in ScreenSaverSaver.ini file
 Use the **KeepAwakeIterations** setting to ensure that the devices are not compromized.
 
 
+![Icon](https://github.com/arun-ks/ScreenSaverSaver/main/resources/ScreenSaverSaver.ico?raw=true)
