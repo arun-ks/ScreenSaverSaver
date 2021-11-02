@@ -27,7 +27,7 @@ Loop {
         MouseMove, -10, -10, , R
         countOfSkips := countOfSkips + 1
         VanishingDebugMesg("Skipping Screen saver #" . countOfSkips , 	  5)  ;
-	}
+    }
      else {
               prevX := currX
               prevY := currY
@@ -51,13 +51,11 @@ VanishingDebugMesg(text, displaySeconds){
 
     seconds2Sleep := displaySeconds
 	while seconds2Sleep > 0
-  {
+    {
   	  	Gui, Add, Text, x0 y0, %text%  ;the text to display
 	    Gui, Show, NoActivate, Xn: 0, Yn: 0
         seconds2Sleep := seconds2Sleep - 1
       Sleep, 1000
-  }
-  
-
+    } 
 	Gui, Destroy
 }
