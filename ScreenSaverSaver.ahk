@@ -3,7 +3,6 @@
 
 ; Avoid Screen Saver from starting by slightly moving mouse every few minutes.
 
-
 Menu, Tray, Icon, %A_ScriptDir%/resources/ScreenSaverSaver.ico, , 0
 
 IniRead,KeepAwakeMinutes   ,%A_ScriptDir%/ScreenSaverSaver.ini,Settings,KeepAwakeMinutes       ; Duration after which mouse should move. Make it lesser than system defined screensaver actication time.
@@ -49,13 +48,13 @@ VanishingDebugMesg(text, displaySeconds){
 	Gui, Color, ffffff ;changes background color
 	Gui, Font, 000000 s18 wbold, Verdana ;changes font color, size and font
 
-    seconds2Sleep := displaySeconds
+        seconds2Sleep := displaySeconds
 	while seconds2Sleep > 0
-    {
-  	  	Gui, Add, Text, x0 y0, %text%  ;the text to display
+        {
+            Gui, Add, Text, x0 y0, %text%  ;the text to display
 	    Gui, Show, NoActivate, Xn: 0, Yn: 0
-        seconds2Sleep := seconds2Sleep - 1
-      Sleep, 1000
-    } 
+            seconds2Sleep := seconds2Sleep - 1
+            Sleep, 1000
+        } 
 	Gui, Destroy
 }
