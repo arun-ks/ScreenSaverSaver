@@ -32,6 +32,7 @@ Update following settings in ScreenSaverSaver.ini file
 | ------ | ------ | ----- |
 |KeepAwakeMinutes| 10 | Minutes after which Mouse should be moved. Keep this value a few minutes lower than screen saver timeout |
 |KeepAwakeIterations| 12 | After keeping the screensaver awake for this many iterations, the script will exit |
+|ShowDebugMesgFlag| 0 | If the value is non-zero, the tool will show debug messages |
 
 
 Use the **KeepAwakeIterations** setting to ensure that the devices are not compromized.
