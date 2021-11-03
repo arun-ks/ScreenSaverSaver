@@ -10,7 +10,7 @@ Handy tool for users whose Screen Saver Settings are controlled by corporate Adm
 
 ## How does it work ?
 The script will do the following after regular (configurable) intervals to keep the screensaver at bay.
--  move the mouse 10 pixels down & 10 pixels to the right, then return to initial position  
+-  Move the mouse 10 pixels down & 10 pixels to the right, then return to initial position  
 -  Send key strokes for CRTL+TAB (move to next open program), then CTRL+SHIFT+TAB (move to previous open program) 
 
 If the screen saver has been kept awake for a configurable consecutive iterations, the script will exit.
