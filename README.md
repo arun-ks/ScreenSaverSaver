@@ -9,7 +9,10 @@ Handy tool for users whose Screen Saver Settings are controlled by corporate Adm
 **IMPORTANT: Use this only when you can keep an eye on your computer, to avoid unauthorized access**
 
 ## How does it work ?
-The script will do the following after regular (configurable) intervals to keep the screensaver at bay.
+At regular (configurable) intervals, the application checks the mouse's location.
+
+If the mouse has not moved during this intervals, the script will do the following to keep the screensaver at bay.
+
 -  Move the mouse 10 pixels down & 10 pixels to the right, then return to initial position  
 -  Send key strokes for CRTL+TAB (move to next open program), then CTRL+SHIFT+TAB (move to previous open program) 
 
