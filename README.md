@@ -9,7 +9,9 @@ Handy tool for users whose Screen Saver Settings are controlled by corporate Adm
 **IMPORTANT: Use this only when you can keep an eye on your computer, to avoid unauthorized access**
 
 ## How does it work ?
-The script will move the mouse few pixels after regular (configurable) intervals to keep the screensaver at bay.
+The script will do the following after regular (configurable) intervals to keep the screensaver at bay.
+-  move the mouse 10 pixels down & 10 pixels to the right, then return to initial position  
+-  Send key strokes for CRTL+TAB (move to next open program), then CTRL+SHIFT+TAB (move to previous open program) 
 
 If the screen saver has been kept awake for a configurable consecutive iterations, the script will exit.
 
@@ -22,11 +24,11 @@ Ensure ScreenSaverSaver.ahk, ScreenSaverSaver.exe & ScreenSaverSaver.ini are in 
 ScreenSaverSaver.ico should be in "resources" subfolder.
 
 That's it ! 
-Execute .ahk or .exe file when you need to keep the system unlocked.
+Execute .exe file or .ahk(if you have Autohotkey installed) when you need to keep the system unlocked.
 
 ## Configuration Guide
 
-Update following settings in ScreenSaverSaver.ini file
+Update following settings in ScreenSaverSaver.ini file. In case the file is missing, the application will create the file with default values.
 
 | Parameter |  Default value | Description |
 | ------ | ------ | ----- |
@@ -36,6 +38,3 @@ Update following settings in ScreenSaverSaver.ini file
 
 
 Use the **KeepAwakeIterations** setting to ensure that the devices are not compromized.
-
-
-
