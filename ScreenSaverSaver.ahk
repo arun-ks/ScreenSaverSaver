@@ -4,11 +4,12 @@
 ; Avoid Screen Saver from starting by slightly moving mouse every few minutes.
 
 Menu, Tray, Icon, %A_ScriptDir%/resources/ScreenSaverSaver.ico, , 0
+Menu, Tray,Add,Show Configuration...,SHOWCONFIG
 
-IniRead,KeepAwakeMinutes   ,%A_ScriptDir%/ScreenSaverSaver.ini,Settings,KeepAwakeMinutes       ; Duration after which mouse should move. Make it lesser than system defined screensaver actication time.
-IniRead,KeepAwakeIterations,%A_ScriptDir%/ScreenSaverSaver.ini,Settings,KeepAwakeIterations     ; 
+KeepAwakeMinutes := GetConfigValueFromIni("Settings","KeepAwakeMinutes", 10)       ; Duration(in Minutes) after which mouse should move to avoid Screen Saver. Make it lesser than system defined screensaver actication time.
+KeepAwakeIterations := GetConfigValueFromIni("Settings","KeepAwakeIterations", 12) ; After keeping the screensaver awake for this many iterations, the script will exit
 global ShowDebugMesgFlag
-IniRead,ShowDebugMesgFlag,  %A_ScriptDir%/ScreenSaverSaver.ini,Settings,ShowDebugMesgFlag   ; 
+ShowDebugMesgFlag := GetConfigValueFromIni("Settings","ShowDebugMesgFlag", 0)      ; If the value is non-zero, the tool will show debug messages
 
 VanishingDebugMesg("Starting app with params KeepAwakeMinutes=" . KeepAwakeMinutes . ", KeepAwakeIteration=" . KeepAwakeIterations . ", and ShowDebugMesgFlag=" . ShowDebugMesgFlag , 	  4)  ;
 
@@ -24,6 +25,11 @@ Loop {
         MouseMove, 10, 10, , R
         Sleep, 100
         MouseMove, -10, -10, , R
+        
+        SendInput, {Ctrl Down}{Tab}{Ctrl Up}
+        sleep, 100
+        SendInput, {Ctrl Down}{Shift Down}{Tab}{Shift Up}{Ctrl Up}
+        
         countOfSkips := countOfSkips + 1
         VanishingDebugMesg("Skipping Screen saver #" . countOfSkips , 	  5)  ;
     }
@@ -58,3 +64,20 @@ VanishingDebugMesg(text, displaySeconds){
         } 
 	Gui, Destroy
 }
+
+
+; Read from .ini File, and if the data does not exists write the default value
+GetConfigValueFromIni(section, key, default)
+{
+        IniRead,IniVal,%A_ScriptDir%/ScreenSaverSaver.ini,%section%,%key%
+        if IniVal = ERROR
+        {
+                IniWrite,%default%,%A_ScriptDir%/ScreenSaverSaver.ini,%section%,%key%
+                IniVal := default
+        }
+        return IniVal
+}
+
+SHOWCONFIG:
+  Run, %A_ScriptDir%/ScreenSaverSaver.ini
+Return
