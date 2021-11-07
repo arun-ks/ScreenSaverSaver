@@ -6,8 +6,11 @@
 IfExist %A_ScriptDir%/resources/ScreenSaverSaver.ico 
 {
     Menu, Tray, Icon, %A_ScriptDir%/resources/ScreenSaverSaver.ico, , 0
-    Menu, Tray,Add,Show Configuration...,SHOWCONFIG
 }
+Menu, Tray,Add
+Menu, Tray,Add,Show Configuration...,SHOWCONFIG
+Menu, Tray,Add,Show logs ...,SHOWLOGS
+
 
 KeepAwakeMinutes := GetConfigValueFromIni("Settings","KeepAwakeMinutes", 10)       ; Duration(in Minutes) after which mouse should move to avoid Screen Saver. Make it lesser than system defined screensaver actication time.
 KeepAwakeIterations := GetConfigValueFromIni("Settings","KeepAwakeIterations", 12) ; After keeping the screensaver awake for this many iterations, the script will exit
@@ -19,22 +22,26 @@ VanishingDebugMesg("Starting app with params KeepAwakeMinutes=" . KeepAwakeMinut
 CoordMode, Mouse, Screen
 MouseGetPos, prevX, prevY   
 countOfSkips = 0
+debugLogString = % "Using KeepAwake Mins = " . KeepAwakeMinutes . ", Iterations= " . KeepAwakeIterations . "`n" 
 
 Loop {
     Sleep, % KeepAwakeMinutes * 60 * 1000        ; Time in milli seconds.
    
     MouseGetPos, currX, currY   
     If (currX = prevX and currY = prevY) {       ; Mouse has not moved, do what is needed !
-        MouseMove, 10, 10, , R
+        countOfSkips := countOfSkips + 1
+        VanishingDebugMesg("Mouse was not moved for last " . KeepAwakeMinutes . " minutes. It will move now #" . countOfSkips , 5)  ;
+        
+        FormatTime, currTime, Time, d-MMM,hh:mm:ss 
+        debugLogString := debugLogString . " #(" . countOfSkips . ")@(" . currTime . ")"      
+        
+        MouseMove, 10, 10, , R                                       ; Move mouse 10 pixels down & right ..then move it back
         Sleep, 100
         MouseMove, -10, -10, , R
         
-        SendInput, {Ctrl Down}{Tab}{Ctrl Up}     ; Press CTRL+TAB .. then CTRL+SHIFT+TAB
+        SendInput, {Ctrl Down}{Tab}{Ctrl Up}                         ; Press CTRL+TAB .. then CTRL+SHIFT+TAB
         sleep, 100
-        SendInput, {Ctrl Down}{Shift Down}{Tab}{Shift Up}{Ctrl Up}
-        
-        countOfSkips := countOfSkips + 1
-        VanishingDebugMesg("Skipping Screen saver #" . countOfSkips , 	  5)  ;
+        SendInput, {Ctrl Down}{Shift Down}{Tab}{Shift Up}{Ctrl Up} 
     }
      else {
         prevX := currX
@@ -42,11 +49,12 @@ Loop {
         countOfSkips = 0
      }
      
-     if( countOfSkips >= KeepAwakeIterations) {
-        FormatTime, currTime, Time, ddd MMMM d, hh:mm:ss 
-        MsgBox, 0,, % "Stopping ScreenSaver Saver after " . KeepAwakeIterations . " consecutive iterations at " . currTime
+    if( countOfSkips >= KeepAwakeIterations) {
+        FormatTime, currTime, Time, MMM d, hh:mm:ss 
+        debugLogString := % "ScreenSaver Saver exits after " . KeepAwakeIterations . " consecutive iterations at " . currTime . "`n" . debugLogString 
+        Gosub SHOWLOGS
         break
-      }
+    }
 }
 
 VanishingDebugMesg(text, displaySeconds){
@@ -54,12 +62,12 @@ VanishingDebugMesg(text, displaySeconds){
 	   return
 	   
 	Gui, +AlwaysOnTop +ToolWindow -SysMenu -Caption
-	Gui, Color, ffffff ;changes background color
-	Gui, Font, 000000 s18 wbold, Verdana ;changes font color, size and font
+	Gui, Color, ffffff                                ;changes background color
+	Gui, Font, 000000 s18 wbold, Verdana              ;changes font color, size and font
 
     seconds2Sleep := displaySeconds
 	while seconds2Sleep > 0      {
-        Gui, Add, Text, x0 y0, %text%  ;the text to display
+        Gui, Add, Text, x0 y0, %text%                  ;the text to display
 	    Gui, Show, NoActivate, Xn: 0, Yn: 0
         seconds2Sleep := seconds2Sleep - 1
         Sleep, 1000
@@ -82,4 +90,9 @@ GetConfigValueFromIni(section, key, default)
 
 SHOWCONFIG:
   Run, %A_ScriptDir%/ScreenSaverSaver.ini
-Return
+return
+
+SHOWLOGS:
+  MsgBox, 0,, % debugLogString
+return
+   
