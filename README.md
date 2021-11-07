@@ -47,6 +47,10 @@ The script keeps track of every time the script moved the mouse & swapped screen
 
 Also, when the script finally terminates, it would also display this log.
 
-| Startup Mesg | Termination screen |
-| -------- | ------ |
-| ![Startup](./resources/ProgStartLogMesg.jpg) | ![End](./resources/ProgramTerminateScreen.jpg) |
+| Startup Mesg |
+| -------- | 
+| ![Startup](./resources/ProgStartLogMesg.jpg) | 
+and
+| Termination screen |
+| ------ |
+| ![End](./resources/ProgramTerminateScreen.jpg) |
