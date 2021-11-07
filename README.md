@@ -41,3 +41,8 @@ Update following settings in ScreenSaverSaver.ini file. In case the file is miss
 
 
 Use the **KeepAwakeIterations** setting to ensure that the devices are not compromized.
+
+## Debug Messages 
+The script keeps track of every time the script moved the mouse & swapped screens. This can be seen using the "Show logs.." option in the Tray Menu.
+
+Also, when the script finally terminates, it would also display this log.
