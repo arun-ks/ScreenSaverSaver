@@ -54,12 +54,8 @@ Also, when the script finally terminates, it would also display this log.
 
 
 
-| Termination screen |
-| ------ |
-| ![End](./resources/ProgramTerminateScreen.jpg) |
+| Termination screen | Tray Menu |
+| ------ |------ |
+| ![End](./resources/ProgramTerminateScreen.jpg) |  ![End](./resources/ProgramTrayMenu.jpg) |
 
-
-| Tray Menu |
-| ------ |
-| ![End](./resources/ProgramTrayMenu.jpg) |
 
