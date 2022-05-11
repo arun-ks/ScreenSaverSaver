@@ -1,4 +1,4 @@
-# ScreenSaver Saver
+# ScreenSaver Saver/ Mouse Jiggler
 
 ![Tray Icon](./resources/ScreenSaverSaver.ico)
 
