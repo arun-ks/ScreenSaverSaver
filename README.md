@@ -9,14 +9,14 @@ Handy tool for users whose Screen Saver Settings are controlled by corporate Adm
 **IMPORTANT: Use this only when you can keep an eye on your computer, to avoid unauthorized access**
 
 ## How does it work ?
-At regular (configurable) intervals(`KeepAwakeMaxMinutes`), the application checks the mouse's location.
+After regular configurable intervals(`KeepAwakeMaxMinutes`), the application checks the mouse's location. To avoid detection, the check is done 3-10 seconds less than `KeepAwakeMaxMinutes`.
 
-If the mouse has not moved during this intervals, the script will do the following to keep the screensaver at bay.
+If the mouse has not moved during this interval, the script will do the following to keep the screensaver at bay.
 
--  Move the mouse 10 pixels down & 10 pixels to the right, then return to initial position  
--  Send key strokes for CRTL+TAB (move to next open program), then CTRL+SHIFT+TAB (move to previous open program) 
+-  Move the mouse for random(<5) seconds, using cubic [easing in/out](https://easings.net/) to mimic a natural hand movement
+-  Send key strokes for ALT+TAB (move to next open program), then SHIFT+TAB (move to previous open program). Each keystroke would be done after random time to mimic natural use.
 
-If the screen saver has been kept awake for a configurable consecutive iterations, the script will exit.
+If the screen saver has been kept awake for a configurable consecutive iterations(`KeepAwakeIterations`), the script will exit.
 
 ## Pre-requisite & Installation guide
 You will need [Autohotkey](https://www.autohotkey.com/) installed to execute the .ahk script.
@@ -27,7 +27,7 @@ Ensure ScreenSaverSaver.ahk, ScreenSaverSaver.exe & ScreenSaverSaver.ini are in 
 ScreenSaverSaver.ico should be in "resources" subfolder.
 
 That's it ! 
-Execute .exe file or .ahk(if you have Autohotkey installed) when you need to keep the system unlocked.
+Execute .exe file or .ahk(if you have [Autohotkey](https://www.autohotkey.com/) installed) when you need to keep the system unlocked.
 
 ## Configuration Guide
 
