@@ -9,7 +9,7 @@ Handy tool for users whose Screen Saver Settings are controlled by corporate Adm
 **IMPORTANT: Use this only when you can keep an eye on your computer, to avoid unauthorized access**
 
 ## How does it work ?
-At regular (configurable) intervals, the application checks the mouse's location.
+At regular (configurable) intervals(`KeepAwakeMaxMinutes`), the application checks the mouse's location.
 
 If the mouse has not moved during this intervals, the script will do the following to keep the screensaver at bay.
 
@@ -35,7 +35,7 @@ Update following settings in ScreenSaverSaver.ini file. In case the file is miss
 
 | Parameter |  Default value | Description |
 | ------ | ------ | ----- |
-|KeepAwakeMinutes| 10 | Minutes after which Mouse should be moved. Keep this value a lesser than half of screen saver timeout |
+|KeepAwakeMaxMinutes| 10 | Minutes after which Mouse should be moved. Keep this value a lesser than half of screen saver timeout |
 |KeepAwakeIterations| 12 | After keeping the screensaver awake for this many iterations, the script will exit |
 |ShowDebugMesgFlag| 0 | If the value is non-zero, the tool will show debug messages |
 
