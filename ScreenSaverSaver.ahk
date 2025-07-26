@@ -3,9 +3,8 @@
 
 ; Purpose: Avoid Screen Saver from starting by slightly moving mouse & pressing few buttons every few minutes.
 
-
 ; Setup Tray icon, menu items & read configuration parameters
-IfExist %A_ScriptDir%/resources/ScreenSaverSaver.ico 
+IfExist %A_ScriptDir%/resources/ScreenSaverSaver.ico
 {
     Menu, Tray, Icon, %A_ScriptDir%/resources/ScreenSaverSaver.ico, , 0
 }
@@ -14,46 +13,64 @@ Menu, Tray,Add
 Menu, Tray,Add,Show Configuration...,SHOWCONFIG
 Menu, Tray,Add,Show logs ...,SHOWLOGS
 
-KeepAwakeMinutes := GetConfigValueFromIni("Settings","KeepAwakeMinutes", 10)       ; Duration(in Minutes) after which mouse should move to avoid Screen Saver. Make it lesser than system defined screensaver actication time.
-KeepAwakeIterations := GetConfigValueFromIni("Settings","KeepAwakeIterations", 12) ; After keeping the screensaver awake for this many iterations, the script will exit
+KeepAwakeMaxMinutes := GetConfigValueFromIni("Settings","KeepAwakeMaxMinutes", 10) ; Duration(in Minutes) after which mouse should move to avoid Screen Saver. Make it lesser than system defined screensaver actication time.
+KeepAwakeIterations := GetConfigValueFromIni("Settings","KeepAwakeIterations", 36) ; After keeping the screensaver awake for this many iterations, the script will exit
 global ShowDebugMesgFlag
 ShowDebugMesgFlag := GetConfigValueFromIni("Settings","ShowDebugMesgFlag", 0)      ; If the value is non-zero, the tool will show debug messages
 
-
-VanishingDebugMesg("Starting app with params KeepAwakeMinutes=" . KeepAwakeMinutes . ", KeepAwakeIteration=" . KeepAwakeIterations . ", and ShowDebugMesgFlag=" . ShowDebugMesgFlag , 	  4)  ;
-debugLogString = % "Using KeepAwake Mins = " . KeepAwakeMinutes . ", Iterations= " . KeepAwakeIterations . "`n" 
+VanishingDebugMesg("Starting app with params KeepAwakeMaxMinutes=" . KeepAwakeMaxMinutes . ", KeepAwakeIteration=" . KeepAwakeIterations . ", and ShowDebugMesgFlag=" . ShowDebugMesgFlag , 	  4)  ;
+debugLogString = % "Using KeepAwake Mins = " . KeepAwakeMaxMinutes . ", Iterations= " . KeepAwakeIterations . "`n"
 
 CoordMode, Mouse, Screen
-MouseGetPos, prevX, prevY   
-countOfSkips = 0
+MouseGetPos, prevX, prevY
+countOfKeepAwakeIterations = 0
+totalKeepAwakeMilliSec = 0
+
 Loop {
-    Sleep, % KeepAwakeMinutes * 60 * 1000        ; Time in milli seconds.
-   
-    MouseGetPos, currX, currY   
+    currKeepAwakeTimerMilliSec := KeepAwakeMaxMinutes * 60 * 1000 - Random(3000, 10000)   ; Time in milli seconds with 3-10 sec randomness
+    Sleep, % currKeepAwakeTimerMilliSec   
+
+    MouseGetPos, currX, currY
     If (currX = prevX and currY = prevY) {                           ; Mouse has not moved, do what is needed !
-        countOfSkips := countOfSkips + 1
-        VanishingDebugMesg("Mouse was not moved for last " . KeepAwakeMinutes . " minutes. It will move now #" . countOfSkips , 5)  ;
+        countOfKeepAwakeIterations := countOfKeepAwakeIterations + 1
+        totalKeepAwakeMilliSec := totalKeepAwakeMilliSec + currKeepAwakeTimerMilliSec
+
+        VanishingDebugMesg("Mouse was not moved for last " . Round(totalKeepAwakeMilliSec / 60000, 2) . " minutes. It will move now #" . countOfKeepAwakeIterations , 5)  ;
+        FormatTime, currTime, Time, d-MMM,HH:mm:ss
+        debugLogString := debugLogString . " #(" . countOfKeepAwakeIterations . ")@(" . currTime . ")"
+
+        ; Smooth mouse movement with acceleration/deceleration
+        moveX := Random(-50, 150)
+        moveY := Random(-50, 150)
+        duration := Random(1000, 5000)      
+        steps := duration / 100
+        Loop, %steps% {   ; Cubic easing in/out for more natural movement
+            t := A_Index/steps            
+            easedT := t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+            MouseMove, currX + (moveX * easedT), currY + (moveY * easedT), 0
+            Sleep, 10
+        }        
+        MouseMove, Random(-5, 5), Random(-5, 5), 0, R                 ; Small random adjustment after main movement
         
-        FormatTime, currTime, Time, d-MMM,hh:mm:ss 
-        debugLogString := debugLogString . " #(" . countOfSkips . ")@(" . currTime . ")"      
+        Sleep, Random(50, 300)
         
-        MouseMove, 10, 10, , R                                       ; Move mouse 10 pixels down & 10 pixels to right ..then move it back
-        Sleep, 100
-        MouseMove, -10, -10, , R
-        
-        SendInput, {Ctrl Down}{Tab}{Ctrl Up}                         ; Press CTRL+TAB ... then CTRL+SHIFT+TAB
-        sleep, 100
-        SendInput, {Ctrl Down}{Shift Down}{Tab}{Shift Up}{Ctrl Up} 
-    }
-     else {
+        ; Alt+Tab , then Alt+Shift+Tab
+        keys := ["{Alt Down}","{Tab}","{Shift Down}","{Tab}","{Shift Up}","{Alt Up}"]
+        for each, key in keys {
+             Sleep, % Random(50, 200)
+             SendInput, % key
+        }
+     }
+     else {                                                          ; There is no need to keep Awake.
         prevX := currX
         prevY := currY
-        countOfSkips = 0
+        countOfKeepAwakeIterations = 0
+        totalKeepAwakeMilliSec = 0
      }
-     
-    if( countOfSkips >= KeepAwakeIterations) {                      ; If screen saver has been avoided KeepAwakeIterations times, then exit the script
-        FormatTime, currTime, Time, MMM d, hh:mm:ss 
-        debugLogString := % "ScreenSaver Saver exits after " . KeepAwakeIterations . " consecutive iterations at " . currTime . "`n" . debugLogString 
+
+    if( countOfKeepAwakeIterations >= KeepAwakeIterations) {                      ; If screen saver has been avoided KeepAwakeIterations times, then exit the script
+        FormatTime, currTime, Time, MMM d, hh:mm:ss
+        debugLogString := % "ScreenSaver Saver exits after " . KeepAwakeIterations . " consecutive iterations at " . currTime . "`n" . debugLogString
         Gosub SHOWLOGS
         ExitApp
     }
@@ -62,9 +79,10 @@ Loop {
 
 ; Purpose: Flash message <text> for <displaySeconds> on the screen
 VanishingDebugMesg(text, displaySeconds){
-	if ( ShowDebugMesgFlag == 0 ) 
+	if ( ShowDebugMesgFlag == 0 )
 	   return
-	   
+
+    TrayTip , ScreenSaverSaver, % text , displaySeconds*2, 0x20
 	Gui, +AlwaysOnTop +ToolWindow -SysMenu -Caption
 	Gui, Color, ffffff                                ;changes background color
 	Gui, Font, 000000 s18 wbold, Verdana              ;changes font color, size and font
@@ -75,7 +93,7 @@ VanishingDebugMesg(text, displaySeconds){
 	    Gui, Show, NoActivate, Xn: 0, Yn: 0
         seconds2Sleep := seconds2Sleep - 1
         Sleep, 1000
-    } 
+    }
 	Gui, Destroy
 }
 
@@ -92,11 +110,16 @@ GetConfigValueFromIni(section, key, default)
         return IniVal
 }
 
+; Simpliedied Random function
+Random(min, max) {
+    Random, r, min, max
+    return r
+}
+
 SHOWCONFIG:
   Run, %A_ScriptDir%/ScreenSaverSaver.ini
 return
 
 SHOWLOGS:
-  MsgBox, 0,, % debugLogString
+  MsgBox, 64,, % debugLogString
 return
-   
