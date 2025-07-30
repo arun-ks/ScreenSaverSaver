@@ -35,7 +35,7 @@ Loop {
         countOfKeepAwakeIterations := countOfKeepAwakeIterations + 1
         totalKeepAwakeMilliSec := totalKeepAwakeMilliSec + currKeepAwakeTimerMilliSec
 
-        VanishingDebugMesg("Mouse was not moved for last " . Round(totalKeepAwakeMilliSec / 60000, 2) . " minutes. It will move now #" . countOfKeepAwakeIterations , 5)  ;
+        VanishingDebugMesg("Mouse was not moved for last " . Round(totalKeepAwakeMilliSec / 60000, 2) . " minutes. It will move now #" . countOfKeepAwakeIterations , 3)  ;
         FormatTime, currTime, Time, d-MMM,HH:mm:ss
         debugLogString := debugLogString . " #(" . countOfKeepAwakeIterations . ")@(" . currTime . ")"
 
@@ -51,7 +51,8 @@ Loop {
             Sleep, 10
         }        
         MouseMove, Random(-5, 5), Random(-5, 5), 0, R                 ; Small random adjustment after main movement
-        
+        MouseGetPos, prevX, prevY
+                
         Sleep, Random(50, 300)
         
         ; Alt+Tab , then Alt+Shift+Tab
@@ -82,12 +83,12 @@ VanishingDebugMesg(text, displaySeconds){
 	if ( ShowDebugMesgFlag == 0 )
 	   return
 
-    TrayTip , ScreenSaverSaver, % text , displaySeconds*2, 0x20
+  TrayTip , ScreenSaverSaver, % text , displaySeconds*2, 0x20
 	Gui, +AlwaysOnTop +ToolWindow -SysMenu -Caption
 	Gui, Color, ffffff                                ;changes background color
 	Gui, Font, 000000 s18 wbold, Verdana              ;changes font color, size and font
 
-    seconds2Sleep := displaySeconds
+  seconds2Sleep := displaySeconds
 	while seconds2Sleep > 0      {
         Gui, Add, Text, x0 y0, %text%                  ;the text to display
 	    Gui, Show, NoActivate, Xn: 0, Yn: 0
