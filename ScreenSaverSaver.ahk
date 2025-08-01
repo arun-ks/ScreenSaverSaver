@@ -1,7 +1,7 @@
 #SingleInstance force
 #NoEnv
 
-; Purpose: Avoid Screen Saver from starting by slightly moving mouse & pressing few buttons every few minutes.
+; Purpose: Avoid Screen Saver from starting by moving mouse (in a manner similar to human movements) & pressing few buttons every few minutes.
 
 ; Setup Tray icon, menu items & read configuration parameters
 IfExist %A_ScriptDir%/resources/ScreenSaverSaver.ico
@@ -10,11 +10,11 @@ IfExist %A_ScriptDir%/resources/ScreenSaverSaver.ico
 }
 Menu, Tray, Tip, Screen Saver Saver
 Menu, Tray,Add
-Menu, Tray,Add,Show Configuration...,SHOWCONFIG
+Menu, Tray,Add,Show Configuration ...,SHOWCONFIG
 Menu, Tray,Add,Show logs ...,SHOWLOGS
 
-KeepAwakeMaxMinutes := GetConfigValueFromIni("Settings","KeepAwakeMaxMinutes", 10) ; Duration(in Minutes) after which mouse should move to avoid Screen Saver. Make it lesser than system defined screensaver actication time.
-KeepAwakeIterations := GetConfigValueFromIni("Settings","KeepAwakeIterations", 36) ; After keeping the screensaver awake for this many iterations, the script will exit
+KeepAwakeMaxMinutes := GetConfigValueFromIni("Settings","KeepAwakeMaxMinutes", 5) ; Duration(in Minutes) after which mouse should move to avoid Screen Saver. Make it lesser than system defined screensaver actication time.
+KeepAwakeIterations := GetConfigValueFromIni("Settings","KeepAwakeIterations", 24) ; After keeping the screensaver awake for this many iterations, the script will exit
 global ShowDebugMesgFlag
 ShowDebugMesgFlag := GetConfigValueFromIni("Settings","ShowDebugMesgFlag", 0)      ; If the value is non-zero, the tool will show debug messages
 
@@ -31,7 +31,7 @@ Loop {
     Sleep, % currKeepAwakeTimerMilliSec   
 
     MouseGetPos, currX, currY
-    If (currX = prevX and currY = prevY) {                           ; Mouse has not moved, do what is needed !
+    If (1 = 1 or currX = prevX and currY = prevY) {                           ; Mouse has not moved, do what is needed !
         countOfKeepAwakeIterations := countOfKeepAwakeIterations + 1
         totalKeepAwakeMilliSec := totalKeepAwakeMilliSec + currKeepAwakeTimerMilliSec
 
@@ -42,13 +42,16 @@ Loop {
         ; Smooth mouse movement with acceleration/deceleration
         moveX := Random(-50, 150)
         moveY := Random(-50, 150)
-        duration := Random(1000, 5000)      
-        steps := duration / 100
+        ; duration := Random(1000, 5000)      
+        ; steps := duration / 100
+        distance := Sqrt(moveX**2 + moveY**2)
+        steps := Max(15, Round((duration * distance) / 3000))        
+        
         Loop, %steps% {   ; Cubic easing in/out for more natural movement
             t := A_Index/steps            
             easedT := t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
             MouseMove, currX + (moveX * easedT), currY + (moveY * easedT), 0
-            Sleep, 10
+            Sleep, % Round(duration / steps)
         }        
         MouseMove, Random(-5, 5), Random(-5, 5), 0, R                 ; Small random adjustment after main movement
         MouseGetPos, prevX, prevY
@@ -91,7 +94,7 @@ VanishingDebugMesg(text, displaySeconds){
   seconds2Sleep := displaySeconds
 	while seconds2Sleep > 0      {
         Gui, Add, Text, x0 y0, %text%                  ;the text to display
-	    Gui, Show, NoActivate, Xn: 0, Yn: 0
+	      Gui, Show, NoActivate, Xn: 0, Yn: 0
         seconds2Sleep := seconds2Sleep - 1
         Sleep, 1000
     }
@@ -111,7 +114,7 @@ GetConfigValueFromIni(section, key, default)
         return IniVal
 }
 
-; Simpliedied Random function
+; Simplified Random function in C-style
 Random(min, max) {
     Random, r, min, max
     return r
